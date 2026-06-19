@@ -1,0 +1,8 @@
+{
+  "name": "Ecomora",
+  "description": "Ecomora — Advanced Business Commerce & Admin Statistics Dashboard",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
