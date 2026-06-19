@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Product, Order, Customer, UserSettings, UserProfile, OrderStatus, Coupon } from './types';
+import { Product, Order, Customer, UserSettings, UserProfile, OrderStatus, Coupon, User } from './types';
 import {
   INITIAL_PRODUCTS,
   INITIAL_ORDERS,
@@ -15,6 +15,8 @@ import { CustomersView } from './components/CustomersView';
 import { AnalyticsView } from './components/AnalyticsView';
 import { SettingsView } from './components/SettingsView';
 import { CouponsView } from './components/CouponsView';
+import { CategoriesView } from './components/CategoriesView';
+import { AuthScreen } from './components/AuthScreen';
 
 // Modals
 import { ProductModal } from './components/modals/ProductModal';
@@ -60,6 +62,31 @@ export default function App() {
     const saved = localStorage.getItem('ecomora_coupons');
     return saved ? JSON.parse(saved) : INITIAL_COUPONS;
   });
+
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    const saved = localStorage.getItem('ecomora_user');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const [authToken, setAuthToken] = useState<string | null>(() => {
+    return localStorage.getItem('ecomora_token');
+  });
+
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem('ecomora_user', JSON.stringify(currentUser));
+    } else {
+      localStorage.removeItem('ecomora_user');
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (authToken) {
+      localStorage.setItem('ecomora_token', authToken);
+    } else {
+      localStorage.removeItem('ecomora_token');
+    }
+  }, [authToken]);
 
   // Filtering states (In memory)
   const [productCategory, setProductCategory] = useState('All Products');
@@ -283,6 +310,10 @@ export default function App() {
             onDeleteCoupon={handleDeleteCoupon}
           />
         );
+      case 'categories':
+        return (
+          <CategoriesView onNotify={(msg) => triggerToast(msg)} />
+        );
       case 'settings':
         return (
           <SettingsView
@@ -305,10 +336,43 @@ export default function App() {
     { key: 'products', label: 'Products', icon: 'package' },
     { key: 'purchases', label: 'Purchases', icon: 'shoppingcart' },
     { key: 'customers', label: 'Customers', icon: 'users' },
+    { key: 'categories', label: 'Categories', icon: 'tag' },
     { key: 'coupons', label: 'Coupons', icon: 'ticket' },
     { key: 'analytics', label: 'Analytics', icon: 'piechart' },
     { key: 'settings', label: 'Settings', icon: 'settings' },
   ];
+
+  if (!currentUser || !authToken) {
+    return (
+      <div className="min-h-screen bg-[#F8F9FC] dark:bg-[#0B0C0F] relative">
+        <AuthScreen
+          onAuthSuccess={(user, token) => {
+            setCurrentUser(user);
+            setAuthToken(token);
+            triggerToast(`Access approved. Welcome back, ${user.name}!`);
+          }}
+        />
+        {/* Floating toast alerts for authentication actions */}
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+          <AnimatePresence>
+            {toasts.map((t) => (
+              <motion.div
+                key={t.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.15 } }}
+                className="bg-gray-950 dark:bg-white text-white dark:text-gray-955 border border-gray-100/10 dark:border-gray-800/10 px-5 py-3.5 rounded-full text-xs font-black tracking-wide shadow-xl flex items-center gap-2.5"
+              >
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                {t.message}
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#F1F2F5] dark:bg-[#0B0C0F] text-[#15171c] dark:text-gray-100 min-h-screen font-sans flex flex-col transition-colors duration-300">
@@ -355,12 +419,25 @@ export default function App() {
               className="flex items-center gap-2 pl-1 pr-3 py-1.5 rounded-full hover:bg-gray-50 dark:hover:bg-white/5 transition border border-transparent hover:border-gray-100 dark:hover:border-gray-800/80 cursor-pointer"
             >
               <span className="w-8 h-8 rounded-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 flex items-center justify-center text-xs font-black shadow-xs">
-                {getInitials(settings.profile.name)}
+                {getInitials(currentUser ? currentUser.name : settings.profile.name)}
               </span>
               <span className="text-sm font-bold hidden sm:inline text-gray-950 dark:text-white">
-                {settings.profile.name}
+                {currentUser ? currentUser.name : settings.profile.name}
               </span>
               <LucideIcon name="chevrondown" size={13} className="text-gray-400 hidden sm:inline" />
+            </button>
+
+            {/* Quick Sign Out icon action */}
+            <button
+              onClick={() => {
+                setCurrentUser(null);
+                setAuthToken(null);
+                triggerToast("Successfully signed out of terminal.");
+              }}
+              className="w-9 h-9 rounded-xl border border-gray-100 dark:border-gray-800/80 hover:bg-gray-50 dark:hover:bg-white/5 flex items-center justify-center text-gray-500 hover:text-gray-950 dark:hover:text-white transition cursor-pointer"
+              title="Sign Out"
+            >
+              <LucideIcon name="logout" size={14} />
             </button>
           </div>
         </div>

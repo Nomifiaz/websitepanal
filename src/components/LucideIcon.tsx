@@ -43,6 +43,14 @@ export const LucideIcon: React.FC<LucideIconProps> = ({ name, className = '', si
       case 'ticket': return Lucide.Ticket;
       case 'tag': return Lucide.Tag;
       case 'percent': return Lucide.Percent;
+      case 'upload': return Lucide.Upload;
+      case 'calendar': return Lucide.Calendar;
+      case 'lock': return Lucide.Lock;
+      case 'mail': return Lucide.Mail;
+      case 'user': return Lucide.User;
+      case 'eye': return Lucide.Eye;
+      case 'eyeoff': return Lucide.EyeOff;
+      case 'logout': return Lucide.LogOut;
       
       // Category Specific icons
       case 'lamp': return Lucide.Lamp;

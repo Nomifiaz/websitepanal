@@ -1,4 +1,4 @@
-import { Product, Order, Customer, UserSettings, Coupon } from './types';
+import { Product, Order, Customer, UserSettings, Coupon, Category } from './types';
 
 export const PRODUCT_CATEGORIES = ['Furniture', 'Electronic', 'Shoes', 'Clothes', 'Sports', 'Grocery'];
 export const CATEGORY_TABS = ['All Products', 'Most Purchased', 'Furniture', 'Shoes', 'Clothes', 'Electronic', 'Sports', 'Grocery'];
@@ -149,4 +149,14 @@ export const INITIAL_COUPONS: Coupon[] = [
   { id: 'CPN-104', code: 'EXPIRED10', type: 'percentage', value: 10, minPurchase: 20, status: 'Expired', expiryDate: '2026-05-01', usedCount: 50, maxUses: 50 },
   { id: 'CPN-105', code: 'LAUNCHFALL', type: 'fixed', value: 15, minPurchase: 40, status: 'Inactive', expiryDate: '2026-10-31', usedCount: 0, maxUses: 1000 },
 ];
+
+export const INITIAL_CATEGORIES: Category[] = [
+  { id: 1, name: 'Furniture', imageUrl: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=400', isDeleted: false },
+  { id: 2, name: 'Electronic', imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=400', isDeleted: false },
+  { id: 3, name: 'Shoes', imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=400', isDeleted: false },
+  { id: 4, name: 'Clothes', imageUrl: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&q=80&w=400', isDeleted: false },
+  { id: 5, name: 'Sports', imageUrl: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=400', isDeleted: false },
+  { id: 6, name: 'Grocery', imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400', isDeleted: false },
+];
+
 

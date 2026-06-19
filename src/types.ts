@@ -54,3 +54,22 @@ export interface Coupon {
   usedCount: number;
   maxUses: number | null;
 }
+
+export interface Category {
+  id: number;
+  name: string;
+  imageUrl?: string;
+  isDeleted: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: 'user' | 'admin';
+  createdAt?: string;
+  updatedAt?: string;
+}
+
